@@ -31,6 +31,7 @@ public class CarMovement : MonoBehaviour
 
     private void Update()
     {
+       
         if (!arrived && Time.time > lastTimeStopped + trafficLightTime)
         {
             Vector3 directionVec = currentGoalPos - transform.position;
