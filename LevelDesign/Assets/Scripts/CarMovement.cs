@@ -13,8 +13,9 @@ public class CarMovement : MonoBehaviour
     public float lightThreshold = 0.0f;
 
     // Private variables
-    private GameObject[] pointsToGo;
-    private GameObject[] trafficLights;
+    [Header("Lists")]
+    public GameObject[] pointsToGo;
+    public GameObject[] trafficLights;
 
     private int index = 0;
     private Vector3 currentGoalPos = Vector3.zero;
@@ -24,14 +25,12 @@ public class CarMovement : MonoBehaviour
 
     private void Start()
     {
-        pointsToGo = GameObject.FindGameObjectsWithTag("PointToGo");
-        trafficLights = GameObject.FindGameObjectsWithTag("TrafficLight");
-        currentGoalPos = pointsToGo[index].transform.position;
+        currentGoalPos = pointsToGo[index].transform.position; 
+        lastTimeStopped = Time.time + 3.0f;
     }
 
     private void Update()
-    {
-       
+    {       
         if (!arrived && Time.time > lastTimeStopped + trafficLightTime)
         {
             Vector3 directionVec = currentGoalPos - transform.position;
@@ -53,12 +52,14 @@ public class CarMovement : MonoBehaviour
             {
                 index++;
 
-                if (index < pointsToGo.Length)
+                if (index < pointsToGo.Length && !arrived)
+                {
                     currentGoalPos = pointsToGo[index].transform.position;
+                    gameObject.transform.LookAt(currentGoalPos);
+                }
                 else
                     arrived = true;
 
-                transform.LookAt(currentGoalPos);
             }
         }
     }

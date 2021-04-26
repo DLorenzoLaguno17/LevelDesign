@@ -14,8 +14,11 @@ public class Timer : MonoBehaviour
     private Vector3 goalPos;
     private bool arrived = false;
 
+    private float startTime = 0.0f;
+
     private void Start()
     {
+        startTime = Time.time;
         player = GameObject.Find("Player");
         goalPos = GameObject.Find("CharacterObjective").transform.position;
     }
@@ -25,14 +28,21 @@ public class Timer : MonoBehaviour
         Vector3 directionVec = goalPos - player.transform.position;
         float substraction = maxTime - Time.time;
 
-        if (substraction <= 0 && !arrived)
-            text.text = "You lost the car!";
-        else if (directionVec.magnitude <= threshold)
+        if (Time.time > startTime + 5.0f)
         {
-            text.text = "You got them!";
-            arrived = true;
+            if (substraction <= 0 && !arrived)
+                text.text = "You lost the car!";
+            else if (directionVec.magnitude <= threshold || arrived)
+            {
+                text.text = "You got them!";
+                arrived = true;
+            }
+            else
+                text.text = "00:" + substraction.ToString("F1");
         }
-        else
-            text.text = "00:" + substraction.ToString("F1");
+        else if (Time.time > startTime + 4.0f)
+            text.text = "Catch the car!";
+        else if (Time.time > startTime + 2.0f)
+            text.text = "Ready?";
     }
 }
